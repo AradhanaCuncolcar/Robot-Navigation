@@ -16,8 +16,9 @@
   .grp button+button{border-left:1px solid var(--line)}
   button:hover{background:#EEF2F6}
   button:focus-visible,input:focus-visible,canvas:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
-  button.on{background:var(--ink);color:#fff}
-  button.primary{background:var(--ink);color:#fff;font-weight:600;min-width:86px}
+  button.on{background:#14212E;color:#fff}
+  button.primary{background:var(--blue);color:#fff;font-weight:600;min-width:86px}
+  button.primary:hover{background:#2459B8}
   .scrub{flex:1;min-width:180px;display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12.5px}
   input[type=range]{flex:1;accent-color:var(--ink)}
   .wrap{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:14px}
@@ -25,8 +26,11 @@
   .stage{position:relative;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#E4E8EC;height:620px}
   .stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
   #c3{cursor:grab} #c3:active{cursor:grabbing}
-  .hud{position:absolute;left:12px;bottom:12px;background:rgba(255,255,255,.9);border-radius:8px;padding:6px 10px;
-    font-size:12.5px;color:var(--ink-2);pointer-events:none}
+  .under{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px}
+  .hud{display:inline-flex;align-items:center;gap:8px;background:#14212E;color:#fff;border-radius:999px;
+    padding:5px 12px;font-size:12.5px;font-weight:600;white-space:nowrap}
+  .hud i{width:8px;height:8px;border-radius:50%;background:#3DDC97;display:inline-block}
+  .hint{color:var(--muted);font-size:12.5px}
   .note3d{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:40px;color:var(--ink-2)}
   .panel{display:flex;flex-direction:column;gap:10px}
   .card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;
@@ -67,8 +71,8 @@
       <canvas id="c2" tabindex="0" aria-label="Floor plan with the four robots"></canvas>
       <canvas id="c3" style="display:none" aria-label="3D view. Drag to orbit, scroll to zoom."></canvas>
       <div class="note3d" id="no3d">3D needs WebGL and an internet connection to load three.js. The floor plan view works offline.</div>
-      <div class="hud" id="hud"></div>
     </div>
+    <div class="under"><span class="hud"><i></i><span id="hud"></span></span><span class="hint" id="hint"></span></div>
     <div class="legend" id="legend"></div>
   </div>
   <aside class="panel">
@@ -92,7 +96,7 @@ const ICON = {
 const SENS = ["Front","Left","Right","Back"], SDIR=[0,Math.PI/2,-Math.PI/2,Math.PI], HALF=D.arcDeg*Math.PI/360;
 const RATE = 15, STAGGER = 40, TAIL = 34;           // steps per second at 1x, launch gap, drive-off steps
 const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const B = {x0:-1.1, x1:15.5, y0:-3.2, y1:11.5};      // plan bounds (m)
+const B = {x0:-1.1, x1:15.5, y0:-3.6, y1:11.5};      // plan bounds (m)
 
 /* ------------------------------------------------------------------ robot state from trajectories */
 AL.forEach((a,i)=>{ a.launch=i*STAGGER; a.n=a.x.length; a.visible=true; a.dust=[]; a.blinkAt=2+Math.random()*3; a.blink=0; a.conf=[]; a.confDone=false; });
@@ -152,7 +156,7 @@ function drawPlan(ctx, X, Y, s, mode){            // mode: "2d" full plan | "flo
     else{ctx.moveTo(0,u*1.5); ctx.lineTo(u,u*0.3); ctx.lineTo(u*0.4,u*0.3); ctx.lineTo(u*0.4,-u*1.2); ctx.lineTo(-u*0.4,-u*1.2); ctx.lineTo(-u*0.4,u*0.3); ctx.lineTo(-u,u*0.3);}
     ctx.closePath(); ctx.fill(); ctx.restore();
     ctx.font=`700 ${Math.round(s*0.3)}px "Barlow Semi Condensed", Barlow, sans-serif`; ctx.fillStyle=col; ctx.textAlign="center";
-    ctx.fillText(label, X(cx), Y(-G.corr-0.35));
+    ctx.fillText(label, X(cx), Y(-G.corr-G.T-0.42));
   };
   mark(G.entry[1]-0.4,-1.1,+1,"#1E8A5A","Entry");
   mark((G.exit[0]+G.exit[1])/2-0.55,-1.1,-1,"#C0392B","Exit");
@@ -530,7 +534,7 @@ function buildPanel(){
   document.querySelectorAll(".eye").forEach(b=>b.onclick=e=>{ e.stopPropagation(); const a=AL[+b.dataset.i]; a.visible=!a.visible; b.textContent=a.visible?"Hide":"Show"; $("card"+b.dataset.i).classList.toggle("hidden",!a.visible); });
   $("sensors").innerHTML=SENS.map((s,j)=>`<div class="sensor"><span>${s}</span><div class="gauge"><i id="g${j}"></i></div><span class="num" id="gv${j}" style="text-align:right">–</span></div>`).join("");
   $("legend").innerHTML=AL.map((a,i)=>`<span><i style="background:${a.color};height:${Math.max(2,trailWidth(i)*0.7)}px"></i>${a.name}</span>`).join("")
-    + `<span style="color:var(--muted)">Robots enter one after another from the same door. Trails of different widths show where paths overlap.</span>`;
+    + `<span style="color:var(--muted)">Robots enter one after another. Different trail widths show where paths overlap.</span>`;
   setFocus(0);
 }
 function setFocus(i){ focus=i; AL.forEach((a,j)=>$("card"+j).classList.toggle("focus",j===i)); $("sonarTitle").textContent=`Sonar: ${AL[i].name}`; if(three) three.followPos=null; }
@@ -563,7 +567,8 @@ function frame(now){
   scrubbed=false;
   updatePanel(t);
   const fin=AL.filter(a=>stateAt(a,t).phase!=="run"&&stateAt(a,t).phase!=="wait").length;
-  $("hud").textContent=view==="3d"?`${camMode==="orbit"?"Drag to orbit, scroll to zoom":camMode==="follow"?"Following "+AL[focus].name:"Top view"}.  ${fin} of ${AL.length} robots finished.`:`${fin} of ${AL.length} robots finished`;
+  $("hud").textContent=`${fin} of ${AL.length} robots finished`;
+  $("hint").textContent=view==="3d"?(camMode==="orbit"?"Drag to orbit, scroll to zoom":camMode==="follow"?"Following "+AL[focus].name+". Click a card to follow another robot.":"Top view"):"Click a robot card to see its sonar. Space pauses.";
   requestAnimationFrame(frame);
 }
 function setPlay(v){ running=v; $("play").textContent=v?"Pause":(t>=TOTAL?"Replay":"Play"); }

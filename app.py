@@ -32,42 +32,117 @@ ANAME = {"Move-Forward": "Move forward", "Slight-Right-Turn": "Slight right turn
          "Sharp-Right-Turn": "Sharp right turn", "Slight-Left-Turn": "Slight left turn"}
 SCOL = {"SD_front": "#2F5D8A", "SD_left": "#17906F", "SD_right": "#C98A00", "SD_back": "#8A6FB0"}
 
+ALGO_COLORS = ["#2F6FDB", "#E07A10", "#139A6B", "#B0379E"]
 st.markdown(f"""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap');
-html, body, [class*="css"], .stMarkdown, .stText, button, input, select, textarea, label {{
-  font-family: "Barlow", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif !important; }}
-.block-container {{ padding-top: 1.6rem; max-width: 1480px; }}
-h1, h2, h3, h4 {{ font-family: "Barlow Semi Condensed", "Barlow", sans-serif !important;
-  color: {INK}; letter-spacing: 0; }}
-[data-testid="stMetricValue"] {{ font-family: "Barlow Semi Condensed", sans-serif; font-weight: 700;
-  font-variant-numeric: tabular-nums; color: {INK}; }}
-[data-testid="stMetricLabel"] p {{ color: {MUTED}; font-size: 0.9rem; }}
-[data-testid="stMetric"] {{ background: {PANEL}; border: 1px solid {LINE}; border-radius: 10px;
-  padding: 12px 16px; }}
-.stTabs [data-baseweb="tab-list"] {{ gap: 4px; border-bottom: 1px solid {LINE}; }}
-.stTabs [data-baseweb="tab"] {{ font-weight: 600; font-size: 1rem; padding: 8px 16px; }}
-.stTabs [aria-selected="true"] {{ color: {INK}; }}
-[data-testid="stSidebar"] {{ background: {PANEL}; border-right: 1px solid {LINE}; }}
-.hero {{ display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;
-  flex-wrap: wrap; margin-bottom: 6px; }}
-.hero h1 {{ font-size: 2.35rem; line-height: 1.05; margin: 0; padding: 0; font-weight: 700; }}
-.hero p {{ color: {MUTED}; margin: 6px 0 0; max-width: 70ch; font-size: 1.02rem; }}
-.status {{ display: flex; gap: 22px; flex-wrap: wrap; }}
-.status div {{ border-left: 3px solid {INK}; padding-left: 10px; }}
-.status b {{ display: block; font-family: "Barlow Semi Condensed", sans-serif; font-size: 1.5rem;
-  font-variant-numeric: tabular-nums; color: {INK}; line-height: 1.1; }}
-.status span {{ color: {MUTED}; font-size: .85rem; }}
-.explain {{ color: #44525F; max-width: 78ch; }}
+/* ---------- page frame ---------- */
+[data-testid="stHeader"] {{ background: transparent; }}
+.block-container {{ padding-top: 3.4rem; padding-bottom: 3rem; max-width: 1480px; }}
+h1, h2, h3, h4 {{ color: {INK}; letter-spacing: 0; }}
+h4 {{ margin-top: .6rem; }}
+.explain {{ color: #44525F; max-width: 80ch; }}
+
+/* ---------- hero: mission-control header ---------- */
+.hero {{ position: relative; overflow: hidden; background: #14212E; color: #fff; border-radius: 16px;
+  padding: 26px 30px 24px; margin-bottom: 18px; display: grid; grid-template-columns: auto 1fr auto;
+  gap: 26px; align-items: center; }}
+.hero::after {{ content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 5px;
+  background: linear-gradient(90deg, #2F6FDB 0 25%, #E07A10 25% 50%, #139A6B 50% 75%, #B0379E 75% 100%); }}
+.hero h1 {{ color: #fff; font-size: 2.3rem; line-height: 1.1; margin: 0; padding: 0; font-weight: 700; }}
+.hero p {{ color: #B9C6D3; margin: 8px 0 12px; max-width: 72ch; font-size: 1.02rem; line-height: 1.5; }}
+.chips {{ display: flex; flex-wrap: wrap; gap: 8px; }}
+.chip {{ display: inline-flex; align-items: center; gap: 7px; background: #1F3144; color: #E6EDF5;
+  border-radius: 999px; padding: 4px 12px 4px 8px; font-size: .88rem; font-weight: 600; }}
+.chip i {{ width: 10px; height: 10px; border-radius: 50%; display: inline-block; }}
+.stats {{ display: grid; grid-template-columns: repeat(3, minmax(120px, 1fr)); gap: 10px; }}
+.stat {{ background: #1C2D3F; border-radius: 12px; padding: 12px 14px; border-top: 3px solid var(--c); }}
+.stat b {{ display: block; font-size: 1.65rem; line-height: 1.1; font-variant-numeric: tabular-nums; color: #fff; }}
+.stat span {{ color: #9FB0C1; font-size: .82rem; }}
+@media (max-width: 1100px) {{ .hero {{ grid-template-columns: auto 1fr; }} .stats {{ grid-column: 1 / -1; }} }}
+@media (max-width: 640px) {{ .hero {{ grid-template-columns: 1fr; }} .hero svg {{ display: none; }}
+  .stats {{ grid-template-columns: 1fr 1fr; }} }}
+
+/* ---------- tabs as a segmented control (old and new Streamlit markup) ---------- */
+.stTabs [role="tablist"] {{ gap: 6px; background: #fff; border: 1px solid {LINE}; border-radius: 12px;
+  padding: 5px; overflow-x: auto; box-shadow: none; }}
+.stTabs [role="tab"], .stTabs [data-testid="stTab"] {{ height: auto; padding: 8px 16px; border-radius: 8px;
+  font-weight: 600; color: #44525F; white-space: nowrap; border: 0; }}
+.stTabs [role="tab"] p {{ font-weight: 600; }}
+.stTabs [role="tab"]:hover {{ background: #EEF3FA; color: {INK}; }}
+.stTabs [role="tab"][aria-selected="true"] {{ background: #14212E; color: #fff !important; }}
+.stTabs [role="tab"][aria-selected="true"] p, .stTabs [role="tab"][aria-selected="true"] span {{ color: #fff !important; }}
+.stTabs [data-baseweb="tab-highlight"], .stTabs [data-baseweb="tab-border"] {{ display: none; }}
+.stTabs [role="tabpanel"] {{ padding-top: 14px; }}
+
+/* ---------- cards: metrics, charts, tables ---------- */
+[data-testid="stMetric"] {{ background: #fff; border: 1px solid {LINE}; border-left: 5px solid #2F6FDB;
+  border-radius: 12px; padding: 12px 16px; }}
+[data-testid="stColumn"]:nth-child(2) [data-testid="stMetric"] {{ border-left-color: #E07A10; }}
+[data-testid="stColumn"]:nth-child(3) [data-testid="stMetric"] {{ border-left-color: #139A6B; }}
+[data-testid="stColumn"]:nth-child(4) [data-testid="stMetric"] {{ border-left-color: #B0379E; }}
+[data-testid="stMetricValue"] {{ font-weight: 700; font-variant-numeric: tabular-nums; }}
+[data-testid="stMetricLabel"] p {{ color: {MUTED}; }}
+[data-testid="stPlotlyChart"] {{ background: #fff; border: 1px solid {LINE}; border-radius: 12px;
+  padding: 6px 8px; }}
+[data-testid="stDataFrame"] {{ background: #fff; border-radius: 10px; }}
+[data-testid="stMain"] [data-testid="stExpander"] details {{ background: #fff; }}
+
+/* ---------- mission result cards ---------- */
+.results {{ display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 6px 0 10px; }}
+@media (max-width: 1100px) {{ .results {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }} }}
+@media (max-width: 560px) {{ .results {{ grid-template-columns: 1fr; }} }}
+.rc {{ background: #fff; border: 1px solid {LINE}; border-top: 5px solid var(--c); border-radius: 12px; padding: 14px 16px; }}
+.rc .hd {{ display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }}
+.rc .hd b {{ font-size: 1.08rem; flex: 1; }}
+.badge {{ font-size: .78rem; font-weight: 700; padding: 3px 9px; border-radius: 999px; }}
+.ok {{ background: #DFF5EA; color: #0E7A50; }}
+.no {{ background: #FBE3E1; color: #B3261E; }}
+.rc .big {{ display: flex; gap: 18px; margin-bottom: 8px; }}
+.rc .big div b {{ display: block; font-size: 1.5rem; font-variant-numeric: tabular-nums; line-height: 1.1; }}
+.rc .big div span, .rc .row span {{ color: {MUTED}; font-size: .82rem; }}
+.rc .row {{ display: flex; justify-content: space-between; border-top: 1px solid #EDF1F5; padding-top: 6px;
+  margin-top: 6px; font-size: .9rem; font-variant-numeric: tabular-nums; }}
+.meter {{ height: 6px; background: #EDF1F5; border-radius: 3px; overflow: hidden; margin-top: 4px; }}
+.meter i {{ display: block; height: 100%; background: var(--c); }}
+
+/* ---------- sidebar ---------- */
+[data-testid="stSidebar"] h3 {{ color: #fff; font-size: 1.05rem; margin-top: .8rem; }}
+.side-brand {{ display: flex; align-items: center; gap: 10px; margin: 4px 0 6px; color: #fff; font-weight: 700;
+  font-size: 1.05rem; }}
+.side-note {{ color: #9FB0C1; font-size: .85rem; line-height: 1.45; }}
 </style>""", unsafe_allow_html=True)
 
 
-def style_fig(fig, height=360, **kw):
+def robot_svg(size=64, body="#F2B705"):
+    return (f'<svg width="{size}" height="{size}" viewBox="0 0 64 64" aria-hidden="true">'
+            f'<line x1="32" y1="9" x2="36" y2="3" stroke="#C9D4DF" stroke-width="2.4" stroke-linecap="round"/>'
+            f'<circle cx="36.5" cy="3.5" r="3" fill="#2F6FDB"/>'
+            f'<circle cx="32" cy="36" r="26" fill="{body}"/>'
+            f'<circle cx="32" cy="33" r="20" fill="#F4F7FA" stroke="#0E1822" stroke-width="2"/>'
+            f'<rect x="16" y="23" width="32" height="19" rx="9" fill="#14212E"/>'
+            f'<rect x="22" y="27.5" width="6" height="10" rx="3" fill="#8FF1FF"/>'
+            f'<rect x="36" y="27.5" width="6" height="10" rx="3" fill="#8FF1FF"/>'
+            f'<rect x="4" y="30" width="7" height="14" rx="3" fill="#0E1822"/>'
+            f'<rect x="53" y="30" width="7" height="14" rx="3" fill="#0E1822"/></svg>')
+
+
+def style_fig(fig, height=360, title=None, legend_cols=None, **kw):
+    """White card styling. The title sits at the very top and the legend gets its own row
+    underneath it, so the two can never overlap."""
+    has_legend = sum(1 for tr in fig.data if tr.showlegend is not False) > 1 or kw.get("showlegend")
+    n_leg = sum(1 for tr in fig.data if tr.showlegend is not False)
+    rows = -(-n_leg // legend_cols) if legend_cols else 1
+    top = 12 + (34 if title else 0) + ((34 + 22 * (rows - 1)) if has_legend else 0)
     fig.update_layout(
-        height=height, margin=dict(l=10, r=10, t=36, b=10), paper_bgcolor="white", plot_bgcolor="white",
+        height=height + top - 36, margin=dict(l=12, r=12, t=top, b=12),
+        paper_bgcolor="white", plot_bgcolor="white",
         font=dict(family="Barlow, sans-serif", size=13, color=INK),
-        title_font=dict(family="Barlow Semi Condensed, sans-serif", size=16),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0), **kw)
+        title=dict(text=title, x=0.01, xanchor="left", y=1, yanchor="top", yref="container",
+                   pad=dict(t=12), font=dict(family="Barlow Semi Condensed, sans-serif", size=17)) if title else None,
+        legend=dict(orientation="h", x=0, xanchor="left", y=1.0, yanchor="bottom", yref="paper",
+                    bgcolor="rgba(0,0,0,0)",
+                    **({"entrywidth": 1 / legend_cols, "entrywidthmode": "fraction"} if legend_cols else {})),
+        hoverlabel=dict(font_family="Barlow, sans-serif"), **kw)
     fig.update_xaxes(gridcolor="#EDF0F3", zerolinecolor=LINE, linecolor=LINE)
     fig.update_yaxes(gridcolor="#EDF0F3", zerolinecolor=LINE, linecolor=LINE)
     return fig
@@ -75,6 +150,9 @@ def style_fig(fig, height=360, **kw):
 
 # ---------------------------------------------------------------- sidebar
 with st.sidebar:
+    st.markdown(f'<div class="side-brand">{robot_svg(34)}<span>Robot navigator</span></div>'
+                '<div class="side-note">Settings retrain the policy instantly. Mission results for new '
+                'settings take a minute or two to train.</div>', unsafe_allow_html=True)
     st.markdown("### Model settings")
     variant = st.radio("Sensor dataset", list(config.VARIANTS),
                        format_func=lambda k: config.VARIANTS[k]["label"], index=0)
@@ -155,23 +233,27 @@ MKEY = (variant, gamma, tol, rj, train_frac)
 models = train_models(*MKEY)
 
 # ---------------------------------------------------------------- header
+chips = "".join(f'<span class="chip"><i style="background:{A.COLORS[k]}"></i>{A.NAMES[k]}</span>'
+                for k in ("vi", "mc", "hj", "ga"))
 st.markdown(f"""
 <div class="hero">
+  {robot_svg(88)}
   <div>
     <h1>Wall-following robot navigator</h1>
-    <p>A SCITOS G5 robot's 5,456 recorded sonar readings, turned into a Markov decision process and
-    solved with value iteration, then raced against Monte Carlo control, Hooke-Jeeves pattern search
-    and a genetic algorithm in the same hall.</p>
+    <p>5,456 sonar readings from a SCITOS G5 robot, turned into a Markov decision process and solved with
+    value iteration, then raced against three other methods through the same hall.</p>
+    <div class="chips">{chips}</div>
   </div>
-  <div class="status">
-    <div><b>{len(R['history'])}</b><span>value iteration sweeps</span></div>
-    <div><b>{R['acc_test']:.1%}</b><span>match with real robot (test)</span></div>
-    <div><b>4</b><span>algorithms, one room</span></div>
+  <div class="stats">
+    <div class="stat" style="--c:#2F6FDB"><b>{len(R['history'])}</b><span>value iteration sweeps</span></div>
+    <div class="stat" style="--c:#139A6B"><b>{R['acc_test']:.1%}</b><span>match with real robot</span></div>
+    <div class="stat" style="--c:#E07A10"><b>{sum(v['metrics']['completed'] for v in mission_runs(models, MKEY, False, 0).values())}/4</b><span>robots reach the exit</span></div>
   </div>
 </div>""", unsafe_allow_html=True)
 
 tab_live, tab_alg, tab_vi, tab_pol, tab_eval, tab_data = st.tabs(
-    ["Mission", "Algorithms", "Value iteration", "Policy explorer", "Evaluation", "Dataset"])
+    [":material/route: Mission", ":material/model_training: Algorithms", ":material/functions: Value iteration",
+     ":material/grid_view: Policy explorer", ":material/fact_check: Evaluation", ":material/database: Dataset"])
 
 
 def show_iframe(html, height):
@@ -184,34 +266,39 @@ def show_iframe(html, height):
 
 # ================================================================ MISSION
 with tab_live:
-    c1, c2, c3, _ = st.columns([1.2, 1, 1.2, 2.5])
-    start_view = c1.radio("Open in", ["Floor plan", "3D view"], horizontal=True)
-    noise = c2.toggle("Sensor noise", value=False, help="Adds ±3 cm sonar noise and small steering and "
+    c1, c2, _ = st.columns([1.3, 1.2, 2.2])
+    noise = c1.toggle("Sensor noise", value=False, help="Adds ±3 cm sonar noise and small steering and "
                                                         "speed errors, like a real robot.")
-    seed = c3.number_input("Noise seed", 0, 999, 0, disabled=not noise,
+    seed = c2.number_input("Noise seed", 0, 999, 0, disabled=not noise,
                            help="Each seed is a different random draw of the noise.")
     runs = mission_runs(models, MKEY, noise, int(seed) if noise else 0)
-    show_iframe(compare.view_html(runs, "3d" if start_view == "3D view" else "2d"), 790)
+    show_iframe(compare.view_html(runs), 750)
 
-    rows = []
+    st.markdown("#### This run")
+    best = min((v["metrics"]["steps"], k) for k, v in runs.items() if v["metrics"]["completed"])[1] \
+        if any(v["metrics"]["completed"] for v in runs.values()) else None
+    cards = []
     for k, v in runs.items():
         m = v["metrics"]
-        rows.append({"algorithm": A.NAMES[k], "reached exit": "Yes" if m["completed"] else "No",
-                     "steps": m["steps"], "time at 9 Hz (s)": round(m["steps"] / 9, 1),
-                     "path length (m)": float(m["distance_m"]), "collisions": m["collisions"],
-                     "checkpoints": f"{m['checkpoints']}/{len(world.CHECKPOINTS)}",
-                     "at ideal wall distance (%)": m["ideal_band_pct"], "fitness": m["fitness"]})
-    st.markdown("#### This run")
-    st.dataframe(pd.DataFrame(rows), hide_index=True, width="stretch",
-                 column_config={"fitness": st.column_config.NumberColumn(
-                     help="100 per checkpoint + 2 × ideal-distance % − 10 per collision + "
-                          "1000 for reaching the exit − 0.5 per step")})
+        badge = '<span class="badge ok">Reached exit</span>' if m["completed"] else '<span class="badge no">Did not finish</span>'
+        fastest = ' <span class="badge" style="background:#FFF4D6;color:#8A5A00">Fastest</span>' if k == best else ""
+        cards.append(f"""<div class="rc" style="--c:{A.COLORS[k]}">
+          <div class="hd">{robot_svg(30, A.COLORS[k])}<b>{A.NAMES[k]}</b></div>
+          <div>{badge}{fastest}</div>
+          <div class="big" style="margin-top:10px"><div><b>{m['steps']}</b><span>steps ({m['steps'] / 9:.0f} s at 9 Hz)</span></div>
+            <div><b>{float(m['distance_m']):.1f} m</b><span>path</span></div></div>
+          <div class="row"><span>At ideal wall distance</span><b>{m['ideal_band_pct']:.0f}%</b></div>
+          <div class="meter"><i style="width:{m['ideal_band_pct']}%"></i></div>
+          <div class="row"><span>Collisions</span><b>{m['collisions']}</b></div>
+          <div class="row"><span>Checkpoints</span><b>{m['checkpoints']}/{len(world.CHECKPOINTS)}</b></div>
+          <div class="row"><span>Fitness</span><b>{m['fitness']:.0f}</b></div></div>""")
+    st.markdown(f'<div class="results">{"".join(cards)}</div>', unsafe_allow_html=True)
     st.markdown(
         "<p class='explain'>Every robot starts in the entry corridor, keeps the wall on its left like the "
-        "real SCITOS G5, passes the recessed bay and the wall column, and leaves through the exit. The "
-        "pillars stay in the middle of the hall, out of the robot's way. The four runs are simulated in "
-        "Python with identical sensors, actions and physics; the view replays them step by step, with the "
-        "robots entering one after another.</p>", unsafe_allow_html=True)
+        "real SCITOS G5, passes the recessed bay and the wall column, and leaves through the exit. The four "
+        "runs are simulated in Python with identical sensors, actions and physics, and the view replays them "
+        "with the robots entering one after another. Fitness = 100 per checkpoint + 2 × ideal-distance % "
+        "− 10 per collision + 1000 for the exit − 0.5 per step.</p>", unsafe_allow_html=True)
 
 # ================================================================ ALGORITHMS
 with tab_alg:
@@ -220,7 +307,7 @@ with tab_alg:
     st.dataframe(rob, hide_index=True, width="stretch")
 
     agree = compare.dataset_agreement(models, R["test_df"])
-    fig = go.Figure(go.Bar(x=[A.NAMES[k] for k in agree], y=[v * 100 for v in agree.values()],
+    fig = go.Figure(go.Bar(x=[A.NAMES[k].replace(" ", "<br>", 1) for k in agree], y=[v * 100 for v in agree.values()],
                            marker_color=[A.COLORS[k] for k in agree], text=[f"{v:.1%}" for v in agree.values()],
                            textposition="outside"))
     fig.update_yaxes(title="Same action as the real robot (%)", range=[0, 110])
@@ -272,7 +359,8 @@ with tab_alg:
     fig.add_scatter(x=hm["episode"], y=hm["completion rate (20-episode)"], mode="lines", name="reached exit (%)",
                     yaxis="y2", line=dict(color=INK, width=2, dash="dot"))
     fig.update_layout(yaxis=dict(title="Return"), yaxis2=dict(title="Reached exit (%)", overlaying="y",
-                                                               side="right", range=[0, 105], showgrid=False))
+                                                               side="right", range=[0, 105], showgrid=False,
+                                                               tickvals=[0, 25, 50, 75, 100]))
     fig.update_xaxes(title="Episode")
     st.plotly_chart(style_fig(fig, 300, title="Learning curve"), width="stretch")
 
@@ -339,9 +427,12 @@ with tab_vi:
     with left:
         h = R["history"]
         fig = go.Figure(go.Scatter(x=list(range(1, len(h) + 1)), y=h, mode="lines",
-                                   line=dict(color=INK, width=2.5), name="max |ΔV|"))
-        fig.add_hline(y=tol, line_dash="dash", line_color=ACOL["Sharp-Right-Turn"],
-                      annotation_text=f"threshold {tol:.0e}", annotation_position="top right")
+                                   line=dict(color=A.COLORS["vi"], width=3), name="max |ΔV|",
+                                   fill="tozeroy", fillcolor="rgba(47,111,219,0.08)"))
+        fig.add_hline(y=tol, line_dash="dash", line_color=ACOL["Sharp-Right-Turn"])
+        fig.add_annotation(xref="paper", x=0.03, y=float(np.log10(tol)), yref="y", yanchor="bottom",
+                           xanchor="left", showarrow=False, text=f"threshold {tol:.0e}",
+                           font=dict(color=ACOL["Sharp-Right-Turn"]))   # log axis: y is given as log10
         fig.update_yaxes(type="log", title="max |ΔV| (log scale)")
         fig.update_xaxes(title="Iteration")
         st.plotly_chart(style_fig(fig, 380, title="Convergence"), width="stretch")
@@ -357,7 +448,7 @@ with tab_vi:
                         hovertemplate="%{customdata}<br>V* = %{y:.2f}<extra></extra>")
         fig.update_xaxes(title="States, sorted by value (faded = never seen in data)", showticklabels=False)
         fig.update_yaxes(title="V*(s)")
-        st.plotly_chart(style_fig(fig, 380, title="Optimal value per state", barmode="overlay"),
+        st.plotly_chart(style_fig(fig, 380, title="Optimal value per state", legend_cols=2, barmode="overlay"),
                         width="stretch")
 
     st.markdown("#### optimal_value_function.csv")
@@ -392,9 +483,14 @@ with tab_pol:
                                        + ("" if mdp.visits[i] else "<br><i>unseen</i>"))
             hr.append(f"state {i}: {mdp.space.name(i)}<br>visits {mdp.visits[i]}")
         z.append(zr); text.append(tr); hover.append(hr)
-    fig = go.Figure(go.Heatmap(z=z, x=[l.replace("_", " ") for l in lb], y=[f for f in fb], text=text,
-                               texttemplate="%{text}", customdata=hover, hovertemplate="%{customdata}<extra></extra>",
-                               colorscale=[[0, "#E7ECF1"], [1, "#6F8FAF"]], colorbar=dict(title="V*")))
+    act_idx = [[mdp.actions.index(next(a for a in mdp.actions if short[a] in t)) for t in row] for row in text]
+    cs = []
+    for j, a in enumerate(mdp.actions):
+        cs += [[j / 4, ACOL[a]], [(j + 1) / 4, ACOL[a]]]
+    fig = go.Figure(go.Heatmap(z=act_idx, x=[l.replace("_", " ") for l in lb], y=[f for f in fb], text=text,
+                               texttemplate="%{text}", textfont=dict(color="white", size=13),
+                               customdata=hover, hovertemplate="%{customdata}<extra></extra>",
+                               colorscale=cs, zmin=-0.5, zmax=3.5, showscale=False, xgap=3, ygap=3))
     fig.update_xaxes(title="Left wall distance", side="bottom")
     fig.update_yaxes(title="Front distance", autorange="reversed")
     st.plotly_chart(style_fig(fig, 360), width="stretch")
@@ -439,9 +535,10 @@ with tab_eval:
         cm = R["confusion"]
         norm = cm.div(cm.sum(axis=1).replace(0, 1), axis=0)
         fig = go.Figure(go.Heatmap(
-            z=norm.values, x=[ANAME[a] for a in cm.columns], y=[ANAME[a] for a in cm.index],
+            z=norm.values, x=[ANAME[a].replace(" ", "<br>", 1) for a in cm.columns], y=[ANAME[a] for a in cm.index],
             text=[[f"{v}<br>{p:.0%}" for v, p in zip(r1, r2)] for r1, r2 in zip(cm.values, norm.values)],
-            texttemplate="%{text}", colorscale=[[0, "#FFFFFF"], [1, INK]], showscale=False))
+            texttemplate="%{text}", colorscale=[[0, "#F4F8FD"], [0.5, "#7FA8EC"], [1, "#1E4FA8"]],
+            showscale=False, xgap=2, ygap=2))
         fig.update_xaxes(title="Policy chose"); fig.update_yaxes(title="Real robot did", autorange="reversed")
         st.plotly_chart(style_fig(fig, 400, title="Confusion matrix (test data)"), width="stretch")
     with right:
@@ -483,7 +580,8 @@ with tab_eval:
         fig.add_scatter(x=gs["gamma"], y=gs["test agreement"] * 100, mode="lines+markers",
                         name="test agreement %", yaxis="y2", line=dict(color=ACOL["Move-Forward"], width=2.5))
         fig.update_layout(yaxis=dict(title="Iterations"),
-                          yaxis2=dict(title="Agreement %", overlaying="y", side="right", showgrid=False))
+                          yaxis2=dict(title="Agreement %", overlaying="y", side="right", showgrid=False,
+                                      tickformat=".1f"))
         fig.update_xaxes(title="Discount factor γ")
         st.plotly_chart(style_fig(fig, 340, title="Discount factor"), width="stretch")
     with right:
@@ -493,7 +591,8 @@ with tab_eval:
         fig.add_scatter(x=ts["tolerance"], y=ts["iterations"], mode="lines+markers", name="iterations",
                         yaxis="y2", line=dict(color=INK, width=2.5))
         fig.update_layout(yaxis=dict(title="Max error vs exact V*", type="log"),
-                          yaxis2=dict(title="Iterations", overlaying="y", side="right", showgrid=False))
+                          yaxis2=dict(title="Iterations", overlaying="y", side="right", showgrid=False,
+                                      tickformat=".0f"))
         fig.update_xaxes(title="Convergence threshold", type="log", autorange="reversed")
         st.plotly_chart(style_fig(fig, 340, title="Accuracy depends on the threshold"),
                         width="stretch")
@@ -523,7 +622,7 @@ with tab_data:
                             name=ANAME[a], marker_color=ACOL[a], legendgroup=a,
                             showlegend=(s == "SD_front"), boxpoints=False)
         fig.update_yaxes(title="Distance (m)", range=[0, 3.5])
-        st.plotly_chart(style_fig(fig, 360, title="Sensor readings by action", boxmode="group"),
+        st.plotly_chart(style_fig(fig, 360, title="Sensor readings by action", legend_cols=2, boxmode="group"),
                         width="stretch")
 
     st.markdown("#### Recording timeline")
@@ -537,7 +636,7 @@ with tab_data:
         fig.add_scatter(x=w.index[m], y=[-0.15] * int(m.sum()), mode="markers", name=ANAME[a],
                         marker=dict(color=ACOL[a], symbol="square", size=7))
     fig.update_yaxes(title="Distance (m)", range=[-0.35, 3.2]); fig.update_xaxes(title="Step")
-    st.plotly_chart(style_fig(fig, 360), width="stretch")
+    st.plotly_chart(style_fig(fig, 360, legend_cols=4), width="stretch")
 
     st.markdown("#### The 24 raw sonars")
     raw = load_raw24()
@@ -557,7 +656,8 @@ with tab_data:
                          hovertemplate="%{customdata}: %{r:.2f} m<extra></extra>")
         fig.update_layout(polar=dict(angularaxis=dict(rotation=90, direction="clockwise", tickvals=[0, 90, 180, 270],
                                                       ticktext=["front", "right", "back", "left"]),
-                                     radialaxis=dict(range=[0, 5], ticksuffix=" m")),
+                                     radialaxis=dict(range=[0, 5], ticksuffix=" m", angle=45, tickangle=45,
+                                                     tickfont=dict(size=10, color=MUTED))),
                           showlegend=False)
         st.plotly_chart(style_fig(fig, 380, title=f"Step {k}: {ANAME[raw['Class'].iloc[k]]}"),
                         width="stretch")
