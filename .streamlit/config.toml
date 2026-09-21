@@ -1,9 +1,23 @@
 [theme]
 base = "light"
 primaryColor = "#2F6FDB"
-backgroundColor = "#FFFFFF"
-secondaryBackgroundColor = "#F6F8FA"
+backgroundColor = "#F2F5F9"
+secondaryBackgroundColor = "#E6ECF3"
 textColor = "#16222E"
+borderColor = "#D6DEE7"
+dataframeHeaderBackgroundColor = "#EAF0F8"
+baseRadius = "10px"
+buttonRadius = "8px"
+font = "Barlow:https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&display=swap, sans-serif"
+headingFont = "Barlow Semi Condensed:https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&display=swap, sans-serif"
+chartCategoricalColors = ["#2F6FDB", "#E07A10", "#139A6B", "#B0379E", "#F2B705", "#5B6B7A"]
+
+[theme.sidebar]
+backgroundColor = "#14212E"
+secondaryBackgroundColor = "#22364A"
+textColor = "#E6EDF5"
+primaryColor = "#6FA8FF"
+borderColor = "#2E4458"
 
 [server]
 headless = true
