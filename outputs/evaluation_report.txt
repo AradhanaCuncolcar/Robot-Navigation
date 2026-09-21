@@ -1,0 +1,16 @@
+variant=4 gamma=0.9 tolerance=1e-06 iterations=148
+States: 72 (44 observed) | Actions: 4 | Transitions observed: 4363
+Agreement train=0.9150 test=0.9148
+
+            class  precision  recall    f1  support
+     Move-Forward      0.826   0.993 0.902      429
+Slight-Right-Turn      0.968   0.622 0.757      148
+ Sharp-Right-Turn      1.000   0.978 0.989      408
+ Slight-Left-Turn      1.000   0.766 0.868      107
+
+Policy             Move-Forward  Slight-Right-Turn  Sharp-Right-Turn  Slight-Left-Turn
+True                                                                                  
+Move-Forward                426                  3                 0                 0
+Slight-Right-Turn            56                 92                 0                 0
+Sharp-Right-Turn              9                  0               399                 0
+Slight-Left-Turn             25                  0                 0                82
